@@ -207,7 +207,7 @@ if __name__ == '__main__':
     parser.add_argument('--patience', type=int, default=10,
                         help='Num of epochs to wait if val loss improves '
                              '(Def: 10).')
-    parser.add_argument('--lr', type=float, default=0.1)
+    parser.add_argument('--lr', type=float, default=0.001)
     parser.add_argument('--momentum', type=float, default=0.5)
     parser.add_argument('--epoch', type=int, default=20, 
                         help='Number of epochs to train (DeF: 20)')
