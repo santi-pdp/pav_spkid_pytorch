@@ -88,7 +88,7 @@ def eval_spkid_epoch(dloader, model, epoch, log_freq):
     return [m_va_loss], [m_va_acc]
 
 def main(opts):
-    dset = SpkDataset(opts.db_path, opts.list_file,
+    dset = SpkDataset(opts.db_path, opts.tr_list_file,
                       opts.ext, opts.spk2idx,
                       in_frames=opts.in_frames)
     dloader = DataLoader(dset, batch_size=opts.batch_size,
@@ -195,7 +195,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train MLP for Speaker Classification')
     parser.add_argument('--db_path', type=str, default='mcp',
                         help='path to feature files (default: ./mcp)')
-    parser.add_argument('--list_file', type=str, default='cfg/all.train',
+    parser.add_argument('--tr_list_file', type=str, default='cfg/all.train',
                         help='File list of train files (default: cfg/all.train)')
     parser.add_argument('--va_list_file', type=str, default='cfg/all.test',
                         help='File list of eval files (default: cfg/all.test)')

@@ -46,7 +46,7 @@ def main(opts):
     model.load_state_dict(torch.load(opts.weights_ckpt))
     print('Loaded weights')
     out_log = open(opts.log_file, 'w')
-    with open(opts.list_file, 'r') as test_f:
+    with open(opts.te_list_file, 'r') as test_f:
         test_list = [l.rstrip() for l in test_f]
         timings = []
         beg_t = timeit.default_timer()
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     
     parser.add_argument('--db_path', type=str, default='mcp',
                         help='path to feature files (default: ./mcp)')
-    parser.add_argument('--list_file', type=str, default='spk_rec.test',
+    parser.add_argument('--te_list_file', type=str, default='spk_rec.test',
                         help='list with names of files to classify (default. spk_rec.test)')
     parser.add_argument('--weights_ckpt', type=str, default=None, help='model: ckpt file with weigths')
     parser.add_argument('--log_file', type=str, default='spk_classification.log',
