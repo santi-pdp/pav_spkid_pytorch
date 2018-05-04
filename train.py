@@ -201,7 +201,7 @@ if __name__ == '__main__':
     parser.add_argument('--ext', type=str, default='mcp', 
                         help='Default mcp')
     parser.add_argument('--spk2idx', type=str, default='cfg/spk2idx.json')
-    parser.add_argument('--batch_size', type=int, default=10)
+    parser.add_argument('--batch_size', type=int, default=1000)
     parser.add_argument('--hsize', type=int, default=100)
     parser.add_argument('--in_frames', type=int, default=21)
     parser.add_argument('--patience', type=int, default=10,
