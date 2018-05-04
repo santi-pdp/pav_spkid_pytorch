@@ -1,8 +1,6 @@
 import numpy as np
 import struct
-import glob
 import json
-import torch
 from torch.utils.data import Dataset
 import os
 
@@ -18,7 +16,9 @@ def read_fmatrix(fmatrix_path):
                              bstream)
         # build np array
         data = np.array(data, dtype=np.float32)
-        data = data.reshape(rows + cols)
+
+        # as rows and cols are tuples, row+cols is tuple (nrows, ncols)
+        data = data.reshape(rows + cols) 
         return data
 
 def build_frames(x, num_frames):

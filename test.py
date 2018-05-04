@@ -46,40 +46,49 @@ def main(opts):
     model.load_state_dict(torch.load(opts.weights_ckpt))
     print('Loaded weights')
     out_log = open(opts.log_file, 'w')
-    with open(opts.test_list, 'r') as test_f:
+    with open(opts.list_file, 'r') as test_f:
         test_list = [l.rstrip() for l in test_f]
         timings = []
         beg_t = timeit.default_timer()
         for test_i, test_file in enumerate(test_list, start=1):
-            test_file = os.path.join(opts.test_db, test_file + '.' + opts.ext)
-            fmatrix = read_fmatrix(test_file)
+            test_path = os.path.join(opts.db_path, test_file + '.' + opts.ext)
+            fmatrix = read_fmatrix(test_path)
             class_ = classify(model, fmatrix, cfg['in_frames']).data[0]
-            end_t = timeit.default_timer()
-            timings.append(end_t - beg_t)
-            beg_t = timeit.default_timer()
-            print('Processing test file {} ({}/{}) with shape: {}'
-                  ', mtime: {:.3f} s'.format(test_file, test_i, len(test_list),
-                                             fmatrix.shape,
-                                             np.mean(timings)))
             out_log.write('{}\t{}\n'.format(test_file, idx2spk[class_]))
+            print('{}\t{}'.format(test_file, idx2spk[class_]))
+            if opts.verbose:
+                end_t = timeit.default_timer()
+                timings.append(end_t - beg_t)
+                beg_t = timeit.default_timer()
+            
+                print('Processing test file {} ({}/{}) with shape: {}'
+                      ', mtime: {:.3f} s'.format(test_file, test_i, len(test_list),
+                                                 fmatrix.shape,
+                                                 np.mean(timings)))
     out_log.close()
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--weights_ckpt', type=str, default=None)
-    parser.add_argument('--log_file', type=str, default='g000_recognition.log')
-    parser.add_argument('--train_cfg', type=str, default='ckpt/train.opts')
-    parser.add_argument('--test_list', type=str, default='spk_rec.test')
-    parser.add_argument('--test_db', type=str, default='sr_test')
-    parser.add_argument('--spk2idx', type=str, default='cfg/spk2idx.json')
-    parser.add_argument('--batch_size', type=int, default=10)
-    parser.add_argument('--ext', type=str, default='mcp')
+    parser = argparse.ArgumentParser(description='Apply trained MLP to classify')
+
+    
+    parser.add_argument('--db_path', type=str, default='mcp',
+                        help='path to feature files (default: ./mcp)')
+    parser.add_argument('--list_file', type=str, default='spk_rec.test',
+                        help='list with names of files to classify (default. spk_rec.test)')
+    parser.add_argument('--weights_ckpt', type=str, default=None, help='model: ckpt file with weigths')
+    parser.add_argument('--log_file', type=str, default='spk_classification.log',
+                        help='result file (default: spk_classification.log')
+    parser.add_argument('--train_cfg', type=str, default='ckpt/train.opts',
+                        help="arguments used for training (default: ckpt/train.opts)")
+    parser.add_argument('--ext', type=str, default='mcp',
+                        help='Extension of feature files (default mcp)')
+    parser.add_argument('--verbose', action='store_true', 
+                        help='Print information about required time, input shape, etc.')
 
 
     opts = parser.parse_args()
     if opts.weights_ckpt is None:
         raise ValueError('Weights ckpt not specified!')
     main(opts)
-
 

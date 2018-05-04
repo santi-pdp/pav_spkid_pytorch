@@ -192,28 +192,32 @@ def main(opts):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--db_path', type=str, default='mcp')
+    parser = argparse.ArgumentParser(description='Train MLP for Speaker Classification')
+    parser.add_argument('--db_path', type=str, default='mcp',
+                        help='path to feature files (default: ./mcp)')
     parser.add_argument('--list_file', type=str, default='cfg/all.train',
-                        help='File list of train files (Def: cfg/all.train).')
+                        help='File list of train files (default: cfg/all.train)')
     parser.add_argument('--va_list_file', type=str, default='cfg/all.test',
-                        help='File list of eval files (Def: cfg/all.test).')
+                        help='File list of eval files (default: cfg/all.test)')
     parser.add_argument('--ext', type=str, default='mcp', 
-                        help='Default mcp')
-    parser.add_argument('--spk2idx', type=str, default='cfg/spk2idx.json')
-    parser.add_argument('--batch_size', type=int, default=1000)
-    parser.add_argument('--hsize', type=int, default=100)
-    parser.add_argument('--in_frames', type=int, default=21)
+                        help='Extension of feature files (default mcp)')
+    parser.add_argument('--spk2idx', type=str, default='cfg/spk2idx.json',
+                        help='File to map spk code to spkID: 0,1, .... (def. cfg/spk2idx.json)')
+    parser.add_argument('--batch_size', type=int, default=1000, help='batch size (default: 1000)')
+    parser.add_argument('--hsize', type=int, default=100,
+                        help='Num. of units in hidden layers (default=100)')
+    parser.add_argument('--in_frames', type=int, default=21,
+                        help='num of frames stacked to create the input features (default: 21)')
     parser.add_argument('--patience', type=int, default=10,
                         help='Num of epochs to wait if val loss improves '
-                             '(Def: 10).')
-    parser.add_argument('--lr', type=float, default=0.001)
-    parser.add_argument('--momentum', type=float, default=0.5)
+                             '(default: 10)')
+    parser.add_argument('--lr', type=float, default=0.001, help='Learning rate (def. 0.001)')
+    parser.add_argument('--momentum', type=float, default=0.5, help='Momentum (def. 0.5)')
     parser.add_argument('--epoch', type=int, default=20, 
-                        help='Number of epochs to train (DeF: 20)')
+                        help='Number of epochs to train (default: 20)')
     parser.add_argument('--log_freq', type=int, default=20, 
-                       help='Every <log_freq> batches, log stuff')
-    parser.add_argument('--save_path', type=str, default='ckpt')
+                        help='Every <log_freq> batches, log stuff (default: 20)')
+    parser.add_argument('--save_path', type=str, default='ckpt', help='path for the model (def. ckpt)')
 
 
     opts = parser.parse_args()
