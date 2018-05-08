@@ -1,4 +1,5 @@
-# pav_spkid_pytorch
+# PAV Speaker Identifier with Deep Neural Networks
+
 Speaker recognition baseline for PAV subject in ETSETB UPC (Telecom BCN)
 
 This program creates a Multilayer perceptron to classify speaker.
