@@ -4,7 +4,7 @@ Speaker recognition baseline for PAV subject in ETSETB UPC (Telecom BCN)
 This program creates a Multilayer perceptron to classify speaker.
 
 ## Installation
-You need python3 and pytorch (version > 0.3)
+You need python3 and pytorch (version > 0.4)
 
 ## Training
 Execute `python train.py --help` to get the help message.
