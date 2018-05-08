@@ -10,6 +10,16 @@ from torch.autograd import Variable
 import timeit
 
 
+# This is for pytorch 0.4
+# For version 0.3, change .item() => .data[0]
+
+# In particular:
+#  0.3  class_ = classify(model, fmatrix, cfg['in_frames']).data[0]
+# >0.4  class_ = classify(model, fmatrix, cfg['in_frames']).item()
+
+
+
+
 def classify(model, fmatrix, in_frames):
     # fmatrix of size [T, feat_dim]
     # (1) build frames with context first
@@ -53,7 +63,7 @@ def main(opts):
         for test_i, test_file in enumerate(test_list, start=1):
             test_path = os.path.join(opts.db_path, test_file + '.' + opts.ext)
             fmatrix = read_fmatrix(test_path)
-            class_ = classify(model, fmatrix, cfg['in_frames']).data[0]
+            class_ = classify(model, fmatrix, cfg['in_frames']).item()
             out_log.write('{}\t{}\n'.format(test_file, idx2spk[class_]))
             print('{}\t{}'.format(test_file, idx2spk[class_]))
             if opts.verbose:

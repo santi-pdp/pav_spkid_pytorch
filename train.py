@@ -14,9 +14,21 @@ import matplotlib.pyplot as plt
 import timeit
 
 
+# This is for pytorch 0.4
+# For version 0.3, change .item() => .data[0]
+
+# In particular:
+#  0.3   pred.eq(y.view_as(pred)).sum().data[0]
+#        loss.data[0]
+
+# >0.4   pred.eq(y.view_as(pred)).sum().item()
+#        loss.item()
+
+
+
 def compute_accuracy(y_, y):
     pred = y_.max(1, keepdim=True)[1] 
-    correct = pred.eq(y.view_as(pred)).sum().data[0]
+    correct = pred.eq(y.view_as(pred)).sum().item()
     return correct / y_.size(0)
 
 def train_spkid_epoch(dloader, model, opt, 
@@ -48,13 +60,14 @@ def train_spkid_epoch(dloader, model, opt,
         end_t = timeit.default_timer()
         timings.append(end_t - beg_t)
         beg_t = timeit.default_timer()
+
         if bidx % log_freq == 0 or bidx >= len(dloader):
             print('TRAINING: {}/{} (Epoch {}) loss: {:.4f} acc:{:.2f} '
                   'mean_btime: {:.3f} s'.format(bidx, len(dloader), 
-                                                epoch, loss.data[0],
+                                                epoch, loss.item(),
                                                 acc,
                                                 np.mean(timings)))
-            losses.append(loss.data[0])
+            losses.append(loss.item())
             accs.append(acc)
     return losses, accs
 
@@ -72,7 +85,7 @@ def eval_spkid_epoch(dloader, model, epoch, log_freq):
         Y_ = model(X)
         loss = F.nll_loss(Y_, Y)
         acc = compute_accuracy(Y_, Y)
-        va_losses.append(loss.data[0])
+        va_losses.append(loss.item())
         va_accs.append(acc)
         end_t = timeit.default_timer()
         timings.append(end_t - beg_t)
@@ -162,6 +175,7 @@ def main(opts):
                  'tr_acc':tr_acc,
                  'va_loss':va_loss,
                  'va_acc':va_acc}
+
         with open(os.path.join(opts.save_path,
                                'train_stats.json'), 'w') as stats_f:
             stats_f.write(json.dumps(stats, indent=2))
